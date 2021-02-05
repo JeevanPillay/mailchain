@@ -22,10 +22,10 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/mailchain/mailchain/crypto/secp256k1/secp256k1test"
 	"github.com/mailchain/mailchain/internal/address/addresstest"
 	"github.com/mailchain/mailchain/internal/keystore"
 	"github.com/mailchain/mailchain/internal/keystore/kdf/multi"
-	"github.com/mailchain/mailchain/internal/testutil"
 	"github.com/mailchain/mailchain/sender"
 	"github.com/mailchain/mailchain/stores"
 	"github.com/stretchr/testify/assert"
@@ -204,6 +204,25 @@ func Test_isValid(t *testing.T) {
 			},
 			true,
 		},
+		{
+			"err-encryption-method-name",
+			args{
+				&PostRequestBody{
+					Message: PostMessage{
+						Headers: &PostHeaders{
+							To:   hex.EncodeToString(addresstest.EthereumCharlotte),
+							From: hex.EncodeToString(addresstest.EthereumSofia),
+						},
+						Subject:   "subject-value",
+						Body:      "body-value",
+						PublicKey: hex.EncodeToString(addresstest.EthereumSofia),
+					},
+				},
+				"ethereum",
+				"mainnet",
+			},
+			true,
+		},
 		// these tests should be brought back in some form
 		// {
 		// 	"err-decode-to",
@@ -254,8 +273,9 @@ func Test_isValid(t *testing.T) {
 						},
 						Subject:   "subject-value",
 						Body:      "body-value",
-						PublicKey: "0x" + hex.EncodeToString(testutil.CharlottePublicKey.Bytes()),
+						PublicKey: "0x" + hex.EncodeToString(secp256k1test.CharlottePublicKey.Bytes()),
 					},
+					EncryptionName: "aes256cbc",
 				},
 				"ethereum",
 				"mainnet",
@@ -296,7 +316,8 @@ func Test_parsePostRequest(t *testing.T) {
 							},
 							"public-key": "0xbdf6fb97c97c126b492186a4d5b28f34f0671a5aacc974da3bde0be93e45a1c50f89ceff72bd04ac9e25a04a1a6cb010aedaf65f91cec8ebe75901c49b63355d",
 							"subject": "test"
-						}
+						},
+						"encryption-method-name": "aes256cbc"
 					}
 					`))
 					return req

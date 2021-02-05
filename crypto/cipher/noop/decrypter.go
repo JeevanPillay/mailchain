@@ -29,5 +29,6 @@ type Decrypter struct {
 
 // Decrypt data using recipient private key with AES in CBC mode.
 func (d Decrypter) Decrypt(data cipher.EncryptedContent) (cipher.PlainContent, error) {
-	return cipher.PlainContent(data), nil
+	content, err := bytesDecode(data)
+	return cipher.PlainContent(content), err
 }

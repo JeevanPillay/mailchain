@@ -1,7 +1,6 @@
 package settings
 
 import (
-	"github.com/mailchain/mailchain"
 	"github.com/mailchain/mailchain/cmd/mailchain/internal/settings/defaults"
 	"github.com/mailchain/mailchain/cmd/mailchain/internal/settings/output"
 	"github.com/mailchain/mailchain/cmd/mailchain/internal/settings/values"
@@ -19,20 +18,23 @@ func keystore(s values.Store) *Keystore {
 	return k
 }
 
+// Keystore configuration element.
 type Keystore struct {
 	Kind          values.String
 	naclFileStore NACLFileStore
 }
 
+// Produce `keystore.Store` based on configuration settings.
 func (s Keystore) Produce() (ks.Store, error) {
 	switch s.Kind.Get() {
-	case mailchain.StoreNACLFilestore:
+	case StoreNACLFilestore:
 		return s.naclFileStore.Produce()
 	default:
 		return nil, errors.Errorf("%q is an unsupported keystore", s.Kind.Get())
 	}
 }
 
+// Output configuration as an `output.Element` for use in exporting configuration.
 func (s Keystore) Output() output.Element {
 	return output.Element{
 		FullName: "keystore",
@@ -51,15 +53,18 @@ func naclFileStore(s values.Store) NACLFileStore {
 	}
 }
 
+// NACLFileStore configuration element.
 type NACLFileStore struct {
 	Path values.String
 }
 
+// Produce `nacl.FileStore` based on configuration settings.
 func (n NACLFileStore) Produce() (*nacl.FileStore, error) {
 	fs := nacl.NewFileStore(n.Path.Get(), logrus.StandardLogger().Writer())
 	return &fs, nil
 }
 
+// Output configuration as an `output.Element` for use in exporting configuration.
 func (n NACLFileStore) Output() output.Element {
 	return output.Element{
 		FullName: "keystore.nacl-filestore",

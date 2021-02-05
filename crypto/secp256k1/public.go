@@ -16,6 +16,7 @@ package secp256k1
 
 import (
 	"crypto/ecdsa"
+	"crypto/sha256"
 	"encoding/hex"
 	"strings"
 
@@ -28,6 +29,24 @@ import (
 // PublicKey based on the secp256k1 curve
 type PublicKey struct {
 	ecdsa ecdsa.PublicKey
+}
+
+// Kind returns the key type
+func (pk PublicKey) Kind() string {
+	return crypto.SECP256K1
+}
+
+// Verify verifies whether sig is a valid signature of message.
+func (pk PublicKey) Verify(message, sig []byte) bool {
+	// VerifySignature requires the signature to be in
+	// [ R || S ] format, so we remove the recid if present.
+	if len(sig) == 65 {
+		sig = sig[:64]
+	}
+
+	hash := sha256.Sum256(message)
+
+	return ethcrypto.VerifySignature(pk.Bytes(), hash[:], sig)
 }
 
 // Bytes returns the byte representation of the public key
@@ -89,6 +108,7 @@ func PublicKeyFromHex(input string) (crypto.PublicKey, error) {
 	}
 }
 
+// ECIES returns an ECIES representation of the public key.
 func (pk PublicKey) ECIES() (*ecies.PublicKey, error) {
 	rpk, err := ethcrypto.DecompressPubkey(pk.Bytes())
 	if err != nil {

@@ -21,8 +21,8 @@ type config struct {
 	sentStore         stores.Sent
 }
 
-// nolint: gocyclo
-func produceConfig(s *settings.Base) (*config, error) { // nolint: funlen
+//nolint: gocyclo
+func produceConfig(s *settings.Root) (*config, error) { //nolint: funlen
 	mailboxStore, err := s.MailboxState.Produce()
 	if err != nil {
 		return nil, errors.WithMessage(err, "Could not config mailbox store")
@@ -75,6 +75,7 @@ func produceConfig(s *settings.Base) (*config, error) { // nolint: funlen
 		if err != nil {
 			return nil, errors.WithMessagef(err, "Could not get %q receivers", name)
 		}
+
 		for k, v := range protocolReceivers {
 			receivers[k] = v
 		}
@@ -83,6 +84,7 @@ func produceConfig(s *settings.Base) (*config, error) { // nolint: funlen
 		if err != nil {
 			return nil, errors.WithMessagef(err, "Could not get %q senders", name)
 		}
+
 		for k, v := range protocolSenders {
 			senders[k] = v
 		}

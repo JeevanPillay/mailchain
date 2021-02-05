@@ -20,12 +20,15 @@ type Encrypter struct {
 	rand io.Reader
 }
 
+// Encrypt contents with the recipients public key.
 func (e Encrypter) Encrypt(recipientPublicKey crypto.PublicKey, message cipher.PlainContent) (cipher.EncryptedContent, error) {
 	if err := validatePublicKeyType(recipientPublicKey); err != nil {
 		return nil, err
 	}
 
-	return easySeal(message, recipientPublicKey.Bytes(), e.rand)
+	encrypted, err := easySeal(message, recipientPublicKey.Bytes(), e.rand)
+
+	return bytesEncode(encrypted), err
 }
 
 func validatePublicKeyType(recipientPublicKey crypto.PublicKey) error {

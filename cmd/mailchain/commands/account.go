@@ -16,7 +16,7 @@ import (
 )
 
 // account represents the say command
-func accountCmd(config *settings.Base) (*cobra.Command, error) {
+func accountCmd(config *settings.Root) (*cobra.Command, error) {
 	cmd := &cobra.Command{
 		Use:   "account",
 		Short: "Manage Accounts",
@@ -42,7 +42,7 @@ Make sure you backup your keys regularly.`,
 	return cmd, nil
 }
 
-func accountAddCmd(ks keystore.Store, passphrasePrompt, privateKeyPrompt prompts.SecretFunc) *cobra.Command {
+func accountAddCmd(ks keystore.Store, passphrasePrompt, privateKeyPrompt prompts.SecretFunc) *cobra.Command { //nolint: funlen
 	cmd := &cobra.Command{
 		Use:   "add",
 		Short: "Add private key",

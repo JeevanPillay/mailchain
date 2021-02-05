@@ -1,7 +1,6 @@
 package settings
 
 import (
-	"github.com/mailchain/mailchain"
 	"github.com/mailchain/mailchain/cmd/mailchain/internal/settings/defaults"
 	"github.com/mailchain/mailchain/cmd/mailchain/internal/settings/output"
 	"github.com/mailchain/mailchain/cmd/mailchain/internal/settings/values"
@@ -12,17 +11,19 @@ import (
 func publicKeyFinders(s values.Store) *PublicKeyFinders {
 	return &PublicKeyFinders{
 		clients: map[string]PublicKeyFinderClient{
-			mailchain.ClientEtherscanNoAuth:   etherscanPublicKeyFinderNoAuth(s),
-			mailchain.ClientEtherscan:         etherscanPublicKeyFinder(s),
+			defaults.ClientEtherscanNoAuth:    etherscanPublicKeyFinderNoAuth(s),
+			defaults.ClientEtherscan:          etherscanPublicKeyFinder(s),
 			defaults.SubstratePublicKeyFinder: substratePublicKeyFinder(s),
 		},
 	}
 }
 
+// PublicKeyFinders configuration element.
 type PublicKeyFinders struct {
 	clients map[string]PublicKeyFinderClient
 }
 
+// Produce `mailbox.PublicKeyFinder` based on configuration settings.
 func (s PublicKeyFinders) Produce(client string) (mailbox.PubKeyFinder, error) {
 	if client == "" {
 		return nil, nil
@@ -34,6 +35,7 @@ func (s PublicKeyFinders) Produce(client string) (mailbox.PubKeyFinder, error) {
 	return m.Produce()
 }
 
+// Output configuration as an `output.Element` for use in exporting configuration.
 func (s PublicKeyFinders) Output() output.Element {
 	elements := []output.Element{}
 	for _, c := range s.clients {

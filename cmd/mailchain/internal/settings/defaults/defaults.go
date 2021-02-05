@@ -18,40 +18,62 @@ import (
 	"log"
 	"path/filepath"
 
-	"github.com/mailchain/mailchain"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
 )
 
 const (
-	Empty        = ""
+	// Mailchain value.
+	Mailchain = "mailchain"
+
+	// Empty default value.
+	Empty = ""
+	// KeystoreKind default value.
 	KeystoreKind = "nacl-filestore"
-
-	SentStoreKind             = mailchain.Mailchain
-	NameServiceAddressKind    = mailchain.Mailchain
-	NameServiceDomainNameKind = mailchain.Mailchain
-
+	// SentStoreKind default value.
+	SentStoreKind = Mailchain
+	// NameServiceAddressKind default value.
+	NameServiceAddressKind = Mailchain
+	// NameServiceDomainNameKind default value.
+	NameServiceDomainNameKind = Mailchain
+	// MailboxStateKind default value.
 	MailboxStateKind = "leveldb"
-
-	ConfigFileName   = ".mailchain"
+	// ConfigFileName default value.
+	ConfigFileName = ".mailchain"
+	// ConfigSubDirName default value.
 	ConfigSubDirName = ".mailchain"
-	ConfigFileKind   = "yaml"
-
+	// ConfigFileKind default value.
+	ConfigFileKind = "yaml"
+	// CORSDisabled default value.
 	CORSDisabled = false
-
+	// Port default value.
 	Port = 8080
-
+	// SubstratePublicKeyFinder default value.
 	SubstratePublicKeyFinder = "substrate-public-key-finder"
 )
 
+const (
+	// ClientEtherscan etherscan client name.
+	ClientEtherscan = "etherscan"
+	// ClientEtherscanNoAuth etherscan without authentication client name.
+	ClientEtherscanNoAuth = "etherscan-no-auth"
+	// ClientEthereumRPC2 etherscan JSON RPC 2.0 client name.
+	ClientEthereumRPC2 = "ethereum-rpc2"
+	// ClientRelay relay client name.
+	ClientRelay = "relay"
+)
+
+// KeystorePath default value.
 func KeystorePath() string {
 	return filepath.Join(MailchainHome(), ".keystore")
 }
 
+// MailboxStatePath default value.
 func MailboxStatePath() string {
 	return filepath.Join(MailchainHome(), ".mailbox")
 }
 
+// MailchainHome directory default value.
 func MailchainHome() string {
 	d, err := homedir.Dir()
 	if err != nil {

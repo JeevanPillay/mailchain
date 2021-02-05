@@ -22,10 +22,11 @@ import (
 	"github.com/mailchain/mailchain"
 	"github.com/mailchain/mailchain/cmd/mailchain/internal/settings/defaults"
 	"github.com/pkg/errors"
-	log "github.com/sirupsen/logrus" // nolint: depguard
-	"github.com/spf13/viper"         // nolint: depguard
+	log "github.com/sirupsen/logrus" //nolint: depguard
+	"github.com/spf13/viper"         //nolint: depguard
 )
 
+// InitStore creates and loads the configuration storage.
 func InitStore(v *viper.Viper, cfgFile, logLevel string, createFile bool) error {
 	if cfgFile == "" {
 		cfgFile = filepath.Join(defaults.MailchainHome(), defaults.ConfigFileName+"."+defaults.ConfigFileKind)
@@ -35,6 +36,7 @@ func InitStore(v *viper.Viper, cfgFile, logLevel string, createFile bool) error 
 		log.Warningf("Invalid 'log-level' %q, default to [Warning]", logLevel)
 		lvl = log.WarnLevel
 	}
+
 	log.SetLevel(lvl)
 	log.SetOutput(os.Stdout)
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true})
@@ -63,6 +65,8 @@ func createEmptyFile(v *viper.Viper, fileName string) error {
 	if err := os.MkdirAll(dir, os.ModePerm); err != nil {
 		return err
 	}
+
 	v.Set("version", mailchain.Version)
+
 	return v.WriteConfigAs(fileName)
 }

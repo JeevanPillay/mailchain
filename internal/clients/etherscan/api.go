@@ -1,22 +1,9 @@
-// Copyright 2019 Finobo
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
 package etherscan
 
 import (
 	"encoding/json"
-
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/mailchain/mailchain/internal/protocols/ethereum"
 	"github.com/pkg/errors"
@@ -85,7 +72,6 @@ func (c APIClient) getTransactionByHash(network string, hash common.Hash) (*type
 	if err := json.Unmarshal(res.Result, &ts); err != nil {
 		return nil, errors.WithStack(err)
 	}
-
 	return ts, nil
 }
 
@@ -113,4 +99,8 @@ func (c APIClient) getTransactionsByAddress(network string, address []byte) (*tx
 		return nil, errors.WithStack(err)
 	}
 	return txResult, nil
+}
+
+func (c APIClient) Decode(input string) ([]byte, error) {
+	return hexutil.Decode(input)
 }

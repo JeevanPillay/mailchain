@@ -1,9 +1,6 @@
 package defaults
 
-import (
-	"github.com/mailchain/mailchain"
-)
-
+// NetworkDefaults are the required default values for a network.
 type NetworkDefaults struct {
 	NameServiceAddress    string
 	NameServiceDomainName string
@@ -13,17 +10,19 @@ type NetworkDefaults struct {
 	Disabled              bool
 }
 
+// EthereumNetworkAny default values for any Ethereum network.
 func EthereumNetworkAny() *NetworkDefaults {
 	return &NetworkDefaults{
 		NameServiceAddress:    NameServiceAddressKind,
 		NameServiceDomainName: NameServiceDomainNameKind,
-		PublicKeyFinder:       mailchain.ClientEtherscanNoAuth,
-		Receiver:              mailchain.ClientEtherscanNoAuth,
+		PublicKeyFinder:       ClientEtherscanNoAuth,
+		Receiver:              ClientEtherscanNoAuth,
 		Sender:                "ethereum-relay",
 		Disabled:              false,
 	}
 }
 
+// SubstrateNetworkAny default values for any Substrate network.
 func SubstrateNetworkAny() *NetworkDefaults {
 	return &NetworkDefaults{
 		// NameServiceAddress:    NameServiceAddressKind,
